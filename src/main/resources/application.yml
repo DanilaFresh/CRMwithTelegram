@@ -1,0 +1,30 @@
+# Настройки сервера
+server:
+  error:
+    include-binding-errors: always  # Включать детали ошибок валидации в ответах (для отладки)
+
+# Логирование
+logging:
+  level:
+    org.springframework.security: trace  # Уровень логирования для Spring Security (TRACE — самый подробный)
+
+# Настройки базы данных
+spring:
+  application:
+    name: CRMforDelivery  # Имя приложения (используется в логах и метриках)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/crm  # URL подключения к PostgreSQL
+    username: codekitchen  # Имя пользователя БД
+    password: 12345678  # Пароль пользователя БД
+
+    # Настройки пула соединений HikariCP
+    hikari:
+      maximum-pool-size: 8  # Максимальный размер пула соединений
+
+  # Настройки Hibernate (JPA)
+  jpa:
+    hibernate:
+      ddl-auto: update  # Автообновление схемы БД (create, update, validate и т.д.)
+jwt:
+  access-token-key: '{"kty":"oct","k":"hi7S5RX5ZRZooHA0RKGctZ-KtR9FoESgCnH-3BNg5XI"}'
+  refresh-token-key: '{"kty":"oct","k":"956PBFst1FguLr5irJD-aQ"}'
