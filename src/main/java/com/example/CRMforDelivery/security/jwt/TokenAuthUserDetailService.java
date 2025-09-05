@@ -1,35 +1,42 @@
 package com.example.CRMforDelivery.security.jwt;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.example.CRMforDelivery.repository.DeactivatedTokenRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
 public class TokenAuthUserDetailService
         implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final DeactivatedTokenRepository tokenRepository;
 
-    public TokenAuthUserDetailService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public TokenAuthUserDetailService(DeactivatedTokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
     }
 
+
     @Override
+    @Transactional
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken authenticationToken)
             throws UsernameNotFoundException {
-        if(authenticationToken.getPrincipal() instanceof Token token ){
+        if (authenticationToken.getPrincipal() instanceof Token token) {
             return new TokenUser(
                     token.subject(),
                     "nopassword",
                     true,
                     true,
-                    Boolean.FALSE.equals(this.jdbcTemplate.queryForObject("""
-                            select exists(select id from t_deactivated_token where id = ?)
-                            """, Boolean.class, token.id())) && token.expiresAt().isAfter(Instant.now()),
+//                    Boolean.FALSE.equals(this.jdbcTemplate.queryForObject("""
+//                            select exists(select id from t_deactivated_token where id = ?)
+//                            """, Boolean.class, token.id())) &&
+                    tokenRepository.findById(token.id()).isEmpty()
+                            &&
+                            token.expiresAt().isAfter(Instant.now()),
                     true,
                     token.authorities().stream().map(SimpleGrantedAuthority::new).toList(),
                     token);

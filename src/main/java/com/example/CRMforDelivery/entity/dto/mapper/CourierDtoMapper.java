@@ -10,6 +10,7 @@ public class CourierDtoMapper {
     public Courier toEntity(CourierDto courierDto) {
         Courier courier = new Courier();
         courier.setName(courierDto.getName());
+        courier.setTgUserName(courierDto.getTgUserName());
         courier.setSurname(courierDto.getSurname());
         courier.setLast_name(courierDto.getLast_name());
         courier.setPhone_number(courierDto.getPhone_number());
@@ -20,6 +21,7 @@ public class CourierDtoMapper {
     public CourierDto toDto(Courier courier) {
           return new CourierDto(
                 courier.getName(),
+                courier.getTgUserName(),
                 courier.getSurname(),
                 courier.getLast_name(),
                 courier.getPhone_number());

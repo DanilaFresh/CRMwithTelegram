@@ -1,8 +1,10 @@
 package com.example.CRMforDelivery.security.jwt;
 
+import com.example.CRMforDelivery.entity.DeactivatedToken;
+import com.example.CRMforDelivery.repository.DeactivatedTokenRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,13 +19,12 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 import java.util.function.Function;
 
 public class JwtAuthConfigurer extends AbstractHttpConfigurer<JwtAuthConfigurer, HttpSecurity> {
+    @Autowired
+    private DeactivatedTokenRepository tokenRepository;
 
     private Function<Token, String> refreshTokenStringSerializer = Object::toString;
 
     private Function<Token, String> accessTokenStringSerializer = Object::toString;
-
-    private JdbcTemplate jdbcTemplate;
-
 
     private Function<String, Token> accessTokenStringDeserializer;
 
@@ -56,7 +57,7 @@ public class JwtAuthConfigurer extends AbstractHttpConfigurer<JwtAuthConfigurer,
                         this.refreshTokenStringDeserializer));
         var authenticationProvider = new PreAuthenticatedAuthenticationProvider();
         authenticationProvider.setPreAuthenticatedUserDetailsService(
-                new TokenAuthUserDetailService(this.jdbcTemplate));
+                new TokenAuthUserDetailService(tokenRepository));
 
         jwtAuthFilter.setSuccessHandler(
                 (request, response, authentication) ->
@@ -69,7 +70,7 @@ public class JwtAuthConfigurer extends AbstractHttpConfigurer<JwtAuthConfigurer,
         var refreshTokenFilter = new RefreshTokenFilter();
         refreshTokenFilter.setAccessTokenStringSerializer(this.accessTokenStringSerializer);
 
-        var jwtLogoutFilter=new JwtLogoutFilter(this.jdbcTemplate);
+        var jwtLogoutFilter=new JwtLogoutFilter(tokenRepository);
 
 
 
@@ -101,8 +102,4 @@ public class JwtAuthConfigurer extends AbstractHttpConfigurer<JwtAuthConfigurer,
         return this;
     }
 
-    public JwtAuthConfigurer jdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        return this;
-    }
 }

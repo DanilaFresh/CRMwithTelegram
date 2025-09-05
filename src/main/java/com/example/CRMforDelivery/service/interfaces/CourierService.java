@@ -1,7 +1,6 @@
-package com.example.CRMforDelivery.service;
+package com.example.CRMforDelivery.service.interfaces;
 
 import com.example.CRMforDelivery.entity.dto.CourierDto;
-import com.example.CRMforDelivery.entity.dto.CustomerDto;
 
 public interface CourierService {
     long addCourier (CourierDto courierDto);

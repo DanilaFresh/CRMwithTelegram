@@ -1,6 +1,5 @@
-package com.example.CRMforDelivery.service;
+package com.example.CRMforDelivery.service.interfaces;
 
-import com.example.CRMforDelivery.entity.dto.CustomerDto;
 import com.example.CRMforDelivery.entity.dto.OrderDto;
 
 public interface OrderService {

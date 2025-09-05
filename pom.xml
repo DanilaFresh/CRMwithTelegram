@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>CRMforDelivery</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>CRMforDelivery</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -91,5 +91,17 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>docker-build</id>
+			<properties>
+				<spring.datasource.url>jdbc:h2:mem:testdb</spring.datasource.url>
+				<spring.datasource.username>sa</spring.datasource.username>
+				<spring.datasource.password></spring.datasource.password>
+				<spring.jpa.hibernate.ddl-auto>none</spring.jpa.hibernate.ddl-auto>
+				<spring.flyway.enabled>false</spring.flyway.enabled>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>

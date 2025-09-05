@@ -5,6 +5,7 @@ import com.example.CRMforDelivery.entity.dto.CustomerDto;
 import com.example.CRMforDelivery.entity.dto.mapper.CustomerDtoMapper;
 import com.example.CRMforDelivery.repository.CustomerRepository;
 import com.example.CRMforDelivery.repository.OrderRepository;
+import com.example.CRMforDelivery.service.interfaces.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

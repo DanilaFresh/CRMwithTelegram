@@ -5,6 +5,11 @@ import jakarta.validation.constraints.*;
 
 public class CourierDto {
     @NotNull()
+    @Size(max = 100)
+    @NotBlank
+    private String tgUserName;
+
+    @NotNull()
     @Size(max = 30)
     @NotBlank
     private String name;
@@ -23,15 +28,17 @@ public class CourierDto {
     message = "phone number must be if form +375XX XXX-XX-XX or 80+375XX XXX-XX-XX")
     private String phone_number;
 
-    public CourierDto() {
-    }
-
-    public CourierDto(String name, String surname, String last_name, String phone_number) {
+    public CourierDto(String tgUserName, String name, String surname, String last_name, String phone_number) {
+        this.tgUserName = tgUserName;
         this.name = name;
         this.surname = surname;
         this.last_name = last_name;
         this.phone_number = phone_number;
     }
+
+    public CourierDto() {
+    }
+
 
     public String getLast_name() {
         return last_name;
@@ -65,4 +72,11 @@ public class CourierDto {
         this.phone_number = phone_number;
     }
 
+    public String getTgUserName() {
+        return tgUserName;
+    }
+
+    public void setTgUserName(String tgUserName) {
+        this.tgUserName = tgUserName;
+    }
 }

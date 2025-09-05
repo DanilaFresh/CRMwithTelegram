@@ -10,6 +10,9 @@ public class Courier {
     @Column(name = "id")
     private long id;
 
+    @Column(name ="tg_user_name",nullable = false,unique = true)
+    private String tgUserName;
+
     @Column(name = "name", nullable = false, length = 30)
     private String name;
 
@@ -81,5 +84,13 @@ public class Courier {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public String getTgUserName() {
+        return tgUserName;
+    }
+
+    public void setTgUserName(String tgUserName) {
+        this.tgUserName = tgUserName;
     }
 }

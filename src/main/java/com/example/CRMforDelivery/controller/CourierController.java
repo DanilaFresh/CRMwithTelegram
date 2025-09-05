@@ -1,16 +1,13 @@
 package com.example.CRMforDelivery.controller;
 
 
-import com.example.CRMforDelivery.entity.Courier;
 import com.example.CRMforDelivery.entity.dto.CourierDto;
-import com.example.CRMforDelivery.entity.dto.CustomerDto;
-import com.example.CRMforDelivery.service.CourierService;
+import com.example.CRMforDelivery.service.interfaces.CourierService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 

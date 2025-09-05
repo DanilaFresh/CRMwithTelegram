@@ -2,9 +2,9 @@ package com.example.CRMforDelivery.service;
 
 import com.example.CRMforDelivery.entity.Courier;
 import com.example.CRMforDelivery.entity.dto.CourierDto;
-import com.example.CRMforDelivery.entity.dto.CustomerDto;
 import com.example.CRMforDelivery.entity.dto.mapper.CourierDtoMapper;
 import com.example.CRMforDelivery.repository.CourierRepository;
+import com.example.CRMforDelivery.service.interfaces.CourierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
