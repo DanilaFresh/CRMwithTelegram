@@ -1,5 +1,6 @@
 package com.example.CRMforDelivery.security.jwt;
 
+import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -9,6 +10,7 @@ import java.util.LinkedList;
 import java.util.UUID;
 import java.util.function.Function;
 
+@Setter
 public class DefRefreshTokenFactory implements Function<Authentication,Token> {
 
     public Duration tokenTtl=Duration.ofDays(1);
@@ -31,7 +33,4 @@ public class DefRefreshTokenFactory implements Function<Authentication,Token> {
                 );
     }
 
-    public void setTokenTtl(Duration tokenTtl) {
-        this.tokenTtl = tokenTtl;
-    }
 }

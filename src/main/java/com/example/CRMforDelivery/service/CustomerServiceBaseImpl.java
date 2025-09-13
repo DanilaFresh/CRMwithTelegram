@@ -1,12 +1,13 @@
 package com.example.CRMforDelivery.service;
 
 import com.example.CRMforDelivery.entity.Customer;
-import com.example.CRMforDelivery.entity.dto.CustomerDto;
+import com.example.CRMforDelivery.entity.dto.CustomerRequestDto;
+import com.example.CRMforDelivery.entity.dto.CustomerResponseDto;
 import com.example.CRMforDelivery.entity.dto.mapper.CustomerDtoMapper;
 import com.example.CRMforDelivery.repository.CustomerRepository;
 import com.example.CRMforDelivery.repository.OrderRepository;
 import com.example.CRMforDelivery.service.interfaces.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,31 +15,27 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CustomerServiceBaseImpl implements CustomerService {
 
-    @Autowired
+
     private final CustomerRepository customerRepository;
 
-    @Autowired
+
     private final OrderRepository orderRepository;
-    @Autowired
+
     private final CustomerDtoMapper customerDtoMapper;
 
-    public CustomerServiceBaseImpl(CustomerRepository customerRepository, OrderRepository orderRepository, CustomerDtoMapper customerDtoMapper) {
-        this.customerRepository = customerRepository;
-        this.orderRepository = orderRepository;
-        this.customerDtoMapper = customerDtoMapper;
-    }
 
-    public long addCustomer(CustomerDto customerDto) {
+    public long addCustomer(CustomerRequestDto customerDto) {
         Customer customer = customerDtoMapper.toEntity(customerDto);
         return customerRepository.save(customer).getId();
     }
 
-    public CustomerDto getCustomerById(Long id) {
+    public CustomerResponseDto getCustomerById(Long id) {
         Optional<Customer> optionalCustomer = customerRepository.findById(id);
-        CustomerDto customerDto;
-        customerDto = optionalCustomer.map(customerDtoMapper::toDto).orElse(null);
+        CustomerResponseDto customerDto;
+        customerDto = optionalCustomer.map(customerDtoMapper::toResponseDto).orElse(null);
         return customerDto;
 
     }
@@ -55,7 +52,7 @@ public class CustomerServiceBaseImpl implements CustomerService {
     }
 
     @Override
-    public boolean updateCustomer(Long id, CustomerDto customerDto) {
+    public boolean updateCustomer(Long id, CustomerRequestDto customerDto) {
         Customer customerUpdated = customerDtoMapper.toEntity(customerDto);
         Optional<Customer> customerOld = customerRepository.findById(id);
         if (customerOld.isPresent()) {

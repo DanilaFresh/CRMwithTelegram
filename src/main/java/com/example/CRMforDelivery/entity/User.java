@@ -1,13 +1,19 @@
 package com.example.CRMforDelivery.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "users")
 public class User {
 
+    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // автоинкремент
     @Column(name = "id")
@@ -22,41 +28,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserAuthority> authorities;
 
-    public User(){
+    public User() {
+    }
 
-    };
+    ;
 
-    public User(String username, String password, List<UserAuthority> authorities) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.authorities = authorities;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<UserAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(List<UserAuthority> authorities) {
-        this.authorities = authorities;
-    }
 }

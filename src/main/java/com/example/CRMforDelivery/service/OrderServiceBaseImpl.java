@@ -2,22 +2,22 @@ package com.example.CRMforDelivery.service;
 
 import com.example.CRMforDelivery.entity.Customer;
 import com.example.CRMforDelivery.entity.Order;
-import com.example.CRMforDelivery.entity.dto.OrderDto;
+import com.example.CRMforDelivery.entity.dto.OrderRequestDto;
+import com.example.CRMforDelivery.entity.dto.OrderResponseDto;
 import com.example.CRMforDelivery.entity.dto.mapper.OrderDtoMapper;
 import com.example.CRMforDelivery.repository.CustomerRepository;
 import com.example.CRMforDelivery.repository.OrderRepository;
 import com.example.CRMforDelivery.service.interfaces.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 @Service
 public class OrderServiceBaseImpl implements OrderService {
-    @Autowired
+
     private final OrderRepository orderRepository;
-    @Autowired
+
     private final OrderDtoMapper orderDtoMapper;
-    @Autowired
+
     private final CustomerRepository customerRepository;
     public OrderServiceBaseImpl(OrderRepository orderRepository, OrderDtoMapper orderDtoMapper, CustomerRepository customerRepository) {
         this.orderRepository = orderRepository;
@@ -26,7 +26,7 @@ public class OrderServiceBaseImpl implements OrderService {
     }
 
     @Override
-    public long addOrder(OrderDto orderDto) {
+    public long addOrder(OrderRequestDto orderDto) {
         Optional<Customer> customerOptional=customerRepository.findById(orderDto.getCustomerId());
         if(customerOptional.isEmpty()){
             return -1;
@@ -36,9 +36,9 @@ public class OrderServiceBaseImpl implements OrderService {
     }
 
     @Override
-    public OrderDto getOrderById(Long id) {
+    public OrderResponseDto getOrderById(Long id) {
         Optional<Order> orderOptional=orderRepository.findById(id);
-        return orderOptional.map(orderDtoMapper::toDto).orElse(null);
+        return orderOptional.map(orderDtoMapper::toResponseDto).orElse(null);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class OrderServiceBaseImpl implements OrderService {
     }
 
     @Override
-    public boolean updateOrder(Long id, OrderDto orderDto) {
+    public boolean updateOrder(Long id, OrderRequestDto orderDto) {
         Optional<Order> orderOptional=orderRepository.findById(id);
         if(orderOptional.isEmpty()){
             return false;

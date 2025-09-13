@@ -1,11 +1,12 @@
 package com.example.CRMforDelivery.controller;
 
 
-import com.example.CRMforDelivery.entity.dto.OrderDto;
+import com.example.CRMforDelivery.entity.dto.OrderRequestDto;
+import com.example.CRMforDelivery.entity.dto.OrderResponseDto;
 import com.example.CRMforDelivery.service.interfaces.OrderService;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,18 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/orders")
+@RequiredArgsConstructor
 public class OrderController {
-    @Autowired
+
     private final OrderService orderService;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDto> getOrder(@PathVariable Long id) {
-        OrderDto orderDto = orderService.getOrderById(id);
+    public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long id) {
+        OrderResponseDto orderDto = orderService.getOrderById(id);
         HttpStatus status;
         if (orderDto == null) {
             status = HttpStatus.NOT_FOUND;
@@ -37,7 +36,7 @@ public class OrderController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addOrder(@Valid @RequestBody OrderDto orderDto) {
+    public ResponseEntity<String> addOrder(@Valid @RequestBody OrderRequestDto orderDto) {
         long id = orderService.addOrder(orderDto);
         if (id > 0) {
             return ResponseEntity.created(URI.create("/api/order/" + id)).body(null);
@@ -51,7 +50,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrder(@Valid @RequestBody OrderDto orderDto,
+    public ResponseEntity<?> updateOrder(@Valid @RequestBody OrderRequestDto orderDto,
                                          @PathVariable Long id) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         if (orderService.updateOrder(id, orderDto)) {

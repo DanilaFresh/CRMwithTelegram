@@ -1,10 +1,11 @@
 package com.example.CRMforDelivery.service.interfaces;
 
-import com.example.CRMforDelivery.entity.dto.OrderDto;
+import com.example.CRMforDelivery.entity.dto.OrderRequestDto;
+import com.example.CRMforDelivery.entity.dto.OrderResponseDto;
 
 public interface OrderService {
-    long addOrder (OrderDto orderDto);
-    OrderDto getOrderById(Long id);
+    long addOrder (OrderRequestDto orderDto);
+    OrderResponseDto getOrderById(Long id);
     boolean deleteOrderById(Long id);
-    boolean updateOrder(Long id , OrderDto orderDto);
+    boolean updateOrder(Long id , OrderRequestDto orderDto);
 }

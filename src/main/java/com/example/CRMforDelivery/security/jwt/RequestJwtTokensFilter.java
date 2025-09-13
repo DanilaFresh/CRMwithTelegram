@@ -1,10 +1,12 @@
 package com.example.CRMforDelivery.security.jwt;
 
+import com.example.CRMforDelivery.entity.dto.AccAndReferJwtTokenResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Setter;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,43 +22,30 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.function.Function;
 
+@Setter
 public class RequestJwtTokensFilter extends OncePerRequestFilter {
 
+
     private RequestMatcher requestMatcher =
-            PathPatternRequestMatcher.pathPattern( HttpMethod.POST,"/jwt/tokens");
+            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/jwt/tokens");
+
 
     private SecurityContextRepository securityContextRepository =
             new RequestAttributeSecurityContextRepository();
 
 
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    private final Function<Authentication, Token> refreshTokenFactory =
+            new DefRefreshTokenFactory();
 
-    public void setAccessTokenStringSerializer(Function<Token, String> accessTokenStringSerializer) {
-        this.accessTokenStringSerializer = accessTokenStringSerializer;
-    }
+    private final Function<Token, Token> accessTokenFactory =
+            new DefAccessTokenFactory();
 
-
-    public void setRefreshTokenStringSerializer(Function<Token, String> refreshTokenStringSerializer) {
-        this.refreshTokenStringSerializer = refreshTokenStringSerializer;
-    }
-
-    public void setSecurityContextRepository(SecurityContextRepository securityContextRepository) {
-        this.securityContextRepository = securityContextRepository;
-    }
-
-    public void setRequestMatcher(RequestMatcher requestMatcher) {
-        this.requestMatcher = requestMatcher;
-    }
-
-    private Function<Authentication, Token> refreshTokenFactory = new DefRefreshTokenFactory();
-
-    private Function<Token, Token> accessTokenFactory = new DefAccessTokenFactory();
 
     private Function<Token, String> refreshTokenStringSerializer = Object::toString;
 
+
     private Function<Token, String> accessTokenStringSerializer = Object::toString;
+
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -76,7 +65,7 @@ public class RequestJwtTokensFilter extends OncePerRequestFilter {
                     response.setStatus(HttpStatus.OK.value());
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                     this.objectMapper.writeValue(response.getWriter(),
-                            new Tokens(
+                            new AccAndReferJwtTokenResponseDto(
                                     this.accessTokenStringSerializer.apply(accessToken),
                                     accessToken.expiresAt().toString(),
                                     this.refreshTokenStringSerializer.apply(refreshToken),

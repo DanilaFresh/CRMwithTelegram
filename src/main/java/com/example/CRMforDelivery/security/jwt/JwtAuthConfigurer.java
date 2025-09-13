@@ -32,7 +32,7 @@ public class JwtAuthConfigurer extends AbstractHttpConfigurer<JwtAuthConfigurer,
 
 
     @Override
-    public void init(HttpSecurity builder) throws Exception {
+    public void init(HttpSecurity builder)  {
         var csrfConfigurer = builder.getConfigurer(CsrfConfigurer.class);
 
         if (csrfConfigurer != null) {
@@ -46,7 +46,7 @@ public class JwtAuthConfigurer extends AbstractHttpConfigurer<JwtAuthConfigurer,
     }
 
     @Override
-    public void configure(HttpSecurity builder) throws Exception {
+    public void configure(HttpSecurity builder)  {
         var requestJwtTokensFilter = new RequestJwtTokensFilter();
         requestJwtTokensFilter.setRefreshTokenStringSerializer(this.refreshTokenStringSerializer);
         requestJwtTokensFilter.setAccessTokenStringSerializer(this.accessTokenStringSerializer);

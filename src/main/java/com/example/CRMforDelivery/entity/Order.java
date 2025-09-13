@@ -1,7 +1,11 @@
 package com.example.CRMforDelivery.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -28,13 +32,6 @@ public class Order {
 
     public Order() {
     }
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
 
     public Order(OrderStatus status,
@@ -49,43 +46,4 @@ public class Order {
         this.deliveryWishes = deliveryWishes;
     }
 
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCargoDescription() {
-        return cargoDescription;
-    }
-
-    public void setCargoDescription(String cargoDescription) {
-        this.cargoDescription = cargoDescription;
-    }
-
-    public String getDeliveryWishes() {
-        return deliveryWishes;
-    }
-
-    public void setDeliveryWishes(String deliveryWishes) {
-        this.deliveryWishes = deliveryWishes;
-    }
 }

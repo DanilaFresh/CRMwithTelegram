@@ -1,6 +1,8 @@
 package com.example.CRMforDelivery.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -13,6 +15,8 @@ public class DeactivatedToken {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Setter
+    @Getter
     @Column(name = "c_keep_until", nullable = false)
     private Instant keepUntil;
 
@@ -23,11 +27,4 @@ public class DeactivatedToken {
         this.keepUntil = keepUntil;
     }
 
-    public Instant getKeepUntil() {
-        return keepUntil;
-    }
-
-    public void setKeepUntil(Instant keepUntil) {
-        this.keepUntil = keepUntil;
-    }
 }

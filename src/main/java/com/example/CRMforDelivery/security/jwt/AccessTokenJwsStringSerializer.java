@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.function.Function;
 
+import static com.nimbusds.jose.JWSAlgorithm.HS256;
+
 public class AccessTokenJwsStringSerializer implements Function<Token, String> {
 
 
@@ -18,8 +20,9 @@ public class AccessTokenJwsStringSerializer implements Function<Token, String> {
 
     private final JWSSigner jwsSigner;
 
+
     private JWSAlgorithm jwsAlgorithm =
-            JWSAlgorithm.HS256;
+            HS256;
 
     public AccessTokenJwsStringSerializer(JWSSigner jwsSigner) {
         this.jwsSigner = jwsSigner;

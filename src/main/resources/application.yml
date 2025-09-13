@@ -6,7 +6,7 @@ server:
 # Логирование
 logging:
   level:
-    org.springframework.security: trace  # Уровень логирования для Spring Security (TRACE — самый подробный)
+    org.flywaydb: DEBUG  # Подробные логи Flyway
 
 # Настройки базы данных
 spring:
@@ -16,15 +16,19 @@ spring:
     url: jdbc:postgresql://localhost:5432/crm  # URL подключения к PostgreSQL
     username: codekitchen  # Имя пользователя БД
     password: 12345678  # Пароль пользователя БД
-
     # Настройки пула соединений HikariCP
     hikari:
       maximum-pool-size: 8  # Максимальный размер пула соединений
-
-  # Настройки Hibernate (JPA)
   jpa:
     hibernate:
-      ddl-auto: update  # Автообновление схемы БД (create, update, validate и т.д.)
+      ddl-auto: none
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version:
+    baseline-description: Initial baseline
+    locations: classpath:db/migration
+
 jwt:
   access-token-key: '{"kty":"oct","k":"hi7S5RX5ZRZooHA0RKGctZ-KtR9FoESgCnH-3BNg5XI"}'
   refresh-token-key: '{"kty":"oct","k":"956PBFst1FguLr5irJD-aQ"}'

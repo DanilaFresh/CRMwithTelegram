@@ -1,10 +1,11 @@
 package com.example.CRMforDelivery.controller;
 
 
-import com.example.CRMforDelivery.entity.dto.CourierDto;
+import com.example.CRMforDelivery.entity.dto.CourierRequestDto;
+import com.example.CRMforDelivery.entity.dto.CourierResponseDto;
 import com.example.CRMforDelivery.service.interfaces.CourierService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,19 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/courier")
+@RequestMapping("/api/couriers")
+@RequiredArgsConstructor
 public class CourierController {
 
-    @Autowired
     private final CourierService courierService;
 
-    public CourierController(CourierService courierService) {
-        this.courierService = courierService;
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<CourierDto> getCourier(@PathVariable Long id) {
-        CourierDto courierDto = courierService.getCourierById(id);
+    public ResponseEntity<CourierResponseDto> getCourier(@PathVariable Long id) {
+        CourierResponseDto courierDto = courierService.getCourierById(id);
         HttpStatus status;
         if (courierDto == null) {
             status = HttpStatus.NOT_FOUND;
@@ -36,19 +33,28 @@ public class CourierController {
                 .body(courierDto);
     }
 
+    @GetMapping("/exists/{tgUserName}")
+    public ResponseEntity<Boolean> existsByTgUsername(@PathVariable String tgUserName) {
+        boolean isExists = courierService.findByTgUserName(tgUserName);
+        return ResponseEntity
+                .ok()
+                .body(isExists);
+    }
+
     @PostMapping()
-    public ResponseEntity<String> addCourier(@Valid @RequestBody CourierDto courierDto) {
+    public ResponseEntity<String> addCourier(@Valid @RequestBody CourierRequestDto courierDto) {
         long id = courierService.addCourier(courierDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.LOCATION, "/api/courier/" + id)
                 .body(null);
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> deleteCourier(@Valid @RequestBody CourierDto courierDto,
-                                            @PathVariable Long id) {
+    public ResponseEntity<?> deleteCourier(@Valid @RequestBody CourierRequestDto courierDto,
+                                           @PathVariable Long id) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        if (courierService.updateCourier(id,courierDto)) {
+        if (courierService.updateCourier(id, courierDto)) {
             status = HttpStatus.NO_CONTENT;
         }
         return ResponseEntity
@@ -67,7 +73,6 @@ public class CourierController {
                 .status(status)
                 .body(null);
     }
-
 
 
 }

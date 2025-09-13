@@ -1,9 +1,11 @@
 package com.example.CRMforDelivery.security.jwt;
+import com.example.CRMforDelivery.entity.dto.AccAndReferJwtTokenResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Setter;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.function.Function;
 
+@Setter
 public class RefreshTokenFilter extends OncePerRequestFilter {
     private RequestMatcher requestMatcher =
            PathPatternRequestMatcher.pathPattern( HttpMethod.POST,"/jwt/refresh");
@@ -48,30 +51,14 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
                     response.setStatus(HttpStatus.OK.value());
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                     this.objectMapper.writeValue(response.getWriter(),
-                            new Tokens(this.accessTokenStringSerializer.apply(accesToken),
+                            new AccAndReferJwtTokenResponseDto(this.accessTokenStringSerializer.apply(accesToken),
                                     accesToken.expiresAt().toString(),null,null));
                 }
             }
-                throw new AccessDeniedException("User must be authentticated with JWT");
+                throw new AccessDeniedException("User must be authenticated with JWT");
         }
         filterChain.doFilter(request,response);
 
-    }
-
-    public void setAccessTokenStringSerializer(Function<Token, String> accessTokenStringSerializer) {
-        this.accessTokenStringSerializer = accessTokenStringSerializer;
-    }
-
-    public void setAccessTokenFactory(Function<Token, Token> accessTokenFactory) {
-        this.accessTokenFactory = accessTokenFactory;
-    }
-
-    public void setSecurityContextRepository(SecurityContextRepository securityContextRepository) {
-        this.securityContextRepository = securityContextRepository;
-    }
-
-    public void setRequestMatcher(RequestMatcher requestMatcher) {
-        this.requestMatcher = requestMatcher;
     }
 
 

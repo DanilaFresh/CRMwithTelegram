@@ -1,11 +1,12 @@
 package com.example.CRMforDelivery.controller;
 
 
-import com.example.CRMforDelivery.entity.dto.CustomerDto;
+import com.example.CRMforDelivery.entity.dto.CustomerRequestDto;
+import com.example.CRMforDelivery.entity.dto.CustomerResponseDto;
 
 import com.example.CRMforDelivery.service.interfaces.CustomerService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,19 +15,15 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/customer")
+@RequestMapping("/api/customers")
+@RequiredArgsConstructor
 public class CustomerController {
 
-    @Autowired
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> getCustomer(@PathVariable Long id) {
-        CustomerDto customerDto = customerService.getCustomerById(id);
+    public ResponseEntity<CustomerResponseDto> getCustomer(@PathVariable Long id) {
+        CustomerResponseDto customerDto = customerService.getCustomerById(id);
         HttpStatus status;
         if (customerDto == null) {
             status = HttpStatus.NOT_FOUND;
@@ -39,25 +36,26 @@ public class CustomerController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addCustomer(@Valid @RequestBody CustomerDto customerDto){
+    public ResponseEntity<String> addCustomer(@Valid @RequestBody CustomerRequestDto customerDto) {
         long id = customerService.addCustomer(customerDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.LOCATION, "/api/customer/" + id)
                 .body(null);
     }
+
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCustomer(@Valid @RequestBody CustomerDto customerDto,
+    public ResponseEntity<?> updateCustomer(@Valid @RequestBody CustomerRequestDto customerDto,
                                             @PathVariable Long id) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        if (customerService.updateCustomer(id,customerDto)) {
+        if (customerService.updateCustomer(id, customerDto)) {
             status = HttpStatus.NO_CONTENT;
         }
         return ResponseEntity
                 .status(status)
                 .body(null);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
@@ -69,7 +67,6 @@ public class CustomerController {
                 .status(status)
                 .body(null);
     }
-
 
 
 }

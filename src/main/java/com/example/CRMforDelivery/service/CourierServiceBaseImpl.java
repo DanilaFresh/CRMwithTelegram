@@ -1,11 +1,15 @@
 package com.example.CRMforDelivery.service;
 
 import com.example.CRMforDelivery.entity.Courier;
-import com.example.CRMforDelivery.entity.dto.CourierDto;
+import com.example.CRMforDelivery.entity.User;
+import com.example.CRMforDelivery.entity.UserAuthority;
+import com.example.CRMforDelivery.entity.dto.CourierRequestDto;
+import com.example.CRMforDelivery.entity.dto.CourierResponseDto;
 import com.example.CRMforDelivery.entity.dto.mapper.CourierDtoMapper;
 import com.example.CRMforDelivery.repository.CourierRepository;
+import com.example.CRMforDelivery.repository.UserAuthorityRepository;
+import com.example.CRMforDelivery.repository.UserRepository;
 import com.example.CRMforDelivery.service.interfaces.CourierService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +18,12 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CourierServiceBaseImpl implements CourierService {
-    @Autowired
+
     private final CourierDtoMapper courierDtoMapper;
 
-    @Autowired
     private final CourierRepository courierRepository;
 
-    public CourierServiceBaseImpl(CourierDtoMapper courierDtoMapper,
+    public CourierServiceBaseImpl(UserRepository userRepository, UserAuthorityRepository authorityRepository, CourierDtoMapper courierDtoMapper,
                                   CourierRepository courierRepository) {
         this.courierDtoMapper = courierDtoMapper;
         this.courierRepository = courierRepository;
@@ -28,16 +31,16 @@ public class CourierServiceBaseImpl implements CourierService {
 
 
     @Override
-    public long addCourier(CourierDto courierDto) {
+    public long addCourier(CourierRequestDto courierDto) {
         Courier courier = courierDtoMapper.toEntity(courierDto);
         return courierRepository.save(courier).getId();
     }
 
     @Override
-    public CourierDto getCourierById(Long id) {
+    public CourierResponseDto getCourierById(Long id) {
         Optional<Courier> optionalCourier = courierRepository.findById(id);
-        CourierDto courierDto;
-        courierDto = optionalCourier.map(courierDtoMapper::toDto).orElse(null);
+        CourierResponseDto courierDto;
+        courierDto = optionalCourier.map(courierDtoMapper::toResponseDto).orElse(null);
         return courierDto;
     }
 
@@ -52,7 +55,7 @@ public class CourierServiceBaseImpl implements CourierService {
     }
 
     @Override
-    public boolean updateCourier(Long id, CourierDto courierDto) {
+    public boolean updateCourier(Long id, CourierRequestDto courierDto) {
         Courier courierUpdated = courierDtoMapper.toEntity(courierDto);
         Optional<Courier> courierOld = courierRepository.findById(id);
         if (courierOld.isPresent()) {
@@ -62,5 +65,10 @@ public class CourierServiceBaseImpl implements CourierService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean findByTgUserName(String username) {
+        return courierRepository.findByTgUserName(username).isPresent();
     }
 }
