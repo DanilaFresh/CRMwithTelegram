@@ -10,20 +10,20 @@ import org.springframework.stereotype.Component;
 public class OrderDtoMapper {
     public Order toEntity(OrderResponseDto orderDto, Customer customer) {
         return new Order(
-                orderDto.getStatus(),
+                orderDto.status(),
                 customer,
-                orderDto.getAddress(),
-                orderDto.getCargoDescription(),
-                orderDto.getDeliveryWishes());
+                orderDto.address(),
+                orderDto.cargoDescription(),
+                orderDto.deliveryWishes());
 
     }
     public Order toEntity(OrderRequestDto orderDto, Customer customer) {
         return new Order(
-                orderDto.getStatus(),
+                orderDto.status(),
                 customer,
-                orderDto.getAddress(),
-                orderDto.getCargoDescription(),
-                orderDto.getDeliveryWishes());
+                orderDto.address(),
+                orderDto.cargoDescription(),
+                orderDto.deliveryWishes());
 
     }
 

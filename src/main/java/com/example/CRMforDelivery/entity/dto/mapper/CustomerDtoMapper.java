@@ -10,19 +10,19 @@ public class CustomerDtoMapper {
 
     public Customer toEntity(CustomerResponseDto customerDto){
         Customer customer=new Customer();
-        customer.setName(customerDto.getName());
-        customer.setSurname(customerDto.getSurname());
-        customer.setLast_name(customerDto.getLast_name());
-        customer.setPhone_number(customerDto.getPhone_number());
+        customer.setName(customerDto.name());
+        customer.setSurname(customerDto.surname());
+        customer.setLast_name(customerDto.last_name());
+        customer.setPhone_number(customerDto.phone_number());
         return customer;
 
     }
     public Customer toEntity(CustomerRequestDto customerDto){
         Customer customer=new Customer();
-        customer.setName(customerDto.getName());
-        customer.setSurname(customerDto.getSurname());
-        customer.setLast_name(customerDto.getLast_name());
-        customer.setPhone_number(customerDto.getPhone_number());
+        customer.setName(customerDto.name());
+        customer.setSurname(customerDto.surname());
+        customer.setLast_name(customerDto.last_name());
+        customer.setPhone_number(customerDto.phone_number());
         return customer;
 
     }

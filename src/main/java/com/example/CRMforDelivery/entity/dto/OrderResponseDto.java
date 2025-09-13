@@ -6,43 +6,26 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.NumberFormat;
 
-@Setter
-@Getter
-public class OrderResponseDto {
+public record OrderResponseDto(
+        @NotNull
+        @NumberFormat(style = NumberFormat.Style.NUMBER)
+        long customerId,
 
-    private long customerId;
+        @NotNull
+        OrderStatus status,
 
-    @NotNull
-    private OrderStatus status;
+        @Size(max = 100)
+        @NotBlank
+        String address,
 
-    @NotNull()
-    @Size(max = 100)
-    @NotBlank
-    private String address;
+        @Size(max = 500)
+        @NotBlank
+        String cargoDescription,
 
-    @NotNull()
-    @Size(max = 500)
-    @NotBlank
-    private String cargoDescription;
+        @Size(max = 500)
+        String deliveryWishes
 
-    @Size(max = 500)
-    private String deliveryWishes;
-
-    public OrderResponseDto(long customerId,
-                            OrderStatus status,
-                            String address,
-                            String cargoDescription,
-                            String deliveryWishes) {
-        this.customerId = customerId;
-        this.status = status;
-        this.address = address;
-        this.cargoDescription = cargoDescription;
-        this.deliveryWishes = deliveryWishes;
-    }
-
-    public OrderResponseDto() {
-    }
-
-
+) {
 }

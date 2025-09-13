@@ -20,7 +20,8 @@ public class DeactivatedToken {
     @Column(name = "c_keep_until", nullable = false)
     private Instant keepUntil;
 
-    public DeactivatedToken() {}
+    public DeactivatedToken() {
+    }
 
     public DeactivatedToken(UUID id, Instant keepUntil) {
         this.id = id;

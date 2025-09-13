@@ -9,21 +9,21 @@ import org.springframework.stereotype.Component;
 public class CourierDtoMapper {
     public Courier toEntity(CourierResponseDto courierDto) {
         Courier courier = new Courier();
-        courier.setName(courierDto.getName());
-        courier.setTgUserName(courierDto.getTgUserName());
-        courier.setSurname(courierDto.getSurname());
-        courier.setLast_name(courierDto.getLast_name());
-        courier.setPhone_number(courierDto.getPhone_number());
+        courier.setName(courierDto.name());
+        courier.setTgUserName(courierDto.tgUserName());
+        courier.setSurname(courierDto.surname());
+        courier.setLast_name(courierDto.last_name());
+        courier.setPhone_number(courierDto.phone_number());
         return courier;
 
     }
     public Courier toEntity(CourierRequestDto courierDto) {
         Courier courier = new Courier();
-        courier.setName(courierDto.getName());
-        courier.setTgUserName(courierDto.getTgUserName());
-        courier.setSurname(courierDto.getSurname());
-        courier.setLast_name(courierDto.getLast_name());
-        courier.setPhone_number(courierDto.getPhone_number());
+        courier.setName(courierDto.name());
+        courier.setTgUserName(courierDto.tgUserName());
+        courier.setSurname(courierDto.surname());
+        courier.setLast_name(courierDto.last_name());
+        courier.setPhone_number(courierDto.phone_number());
         return courier;
 
     }

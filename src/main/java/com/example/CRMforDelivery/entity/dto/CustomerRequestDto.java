@@ -7,32 +7,23 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
-public class CustomerRequestDto {
-    @NotNull()
-    @Size(max = 30)
-    @NotBlank
-    private String name;
+public record CustomerRequestDto(
 
-    @NotNull()
-    @Size(max = 30)
-    @NotBlank
-    private String surname;
+        @Size(max = 30)
+        @NotBlank
+        String name,
 
-    @Size(max = 30)
-    private String last_name;
+        @Size(max = 30)
+        @NotBlank
+        String surname,
 
-    @NotNull(message = "phone_number can't be null")
-    @Pattern(regexp = "^(\\+375|80)\\d{2}\\s?\\d{3}-\\d{2}-\\d{2}$",
-    message = "phone number must be if form (+375|80)XXXXX-XX-XX ")
-    private String phone_number;
+        @Size(max = 30)
+        String last_name,
 
-    public CustomerRequestDto(String name, String surname, String last_name, String phone_number) {
-        this.name = name;
-        this.surname = surname;
-        this.last_name = last_name;
-        this.phone_number = phone_number;
-    }
+        @NotNull(message = "phone_number can't be null")
+        @Pattern(regexp = "^(\\+375|80)\\d{2}\\s?\\d{3}-\\d{2}-\\d{2}$",
+                message = "phone number must be if form (+375|80)XXXXX-XX-XX ")
+        String phone_number
+) {
 
 }

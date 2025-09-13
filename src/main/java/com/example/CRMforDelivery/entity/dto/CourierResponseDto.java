@@ -1,45 +1,33 @@
 package com.example.CRMforDelivery.entity.dto;
-import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
-public class CourierResponseDto {
-    @NotNull()
-    @Size(max = 100)
-    @NotBlank
-    private String tgUserName;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-    @NotNull()
-    @Size(max = 30)
-    @NotBlank
-    private String name;
+public record CourierResponseDto(
 
-    @NotNull()
-    @Size(max = 30)
-    @NotBlank
-    private String surname;
+        @Size(max = 100)
+        @NotBlank
+        String tgUserName,
 
-    @Size(max = 30)
-    @NotBlank
-    private String last_name;
+        @Size(max = 30)
+        @NotBlank
+        String name,
 
-    @NotNull()
-    @Pattern(regexp = "^(\\+375|80)\\d{2}\\s?\\d{3}-\\d{2}-\\d{2}$",
-    message = "phone number must be if form +375XX XXX-XX-XX or 80+375XX XXX-XX-XX")
-    private String phone_number;
+        @Size(max = 30)
+        @NotBlank
+        String surname,
 
-    public CourierResponseDto(String tgUserName, String name, String surname, String last_name, String phone_number) {
-        this.tgUserName = tgUserName;
-        this.name = name;
-        this.surname = surname;
-        this.last_name = last_name;
-        this.phone_number = phone_number;
-    }
+        @Size(max = 30)
+        @NotBlank
+        String last_name,
 
-    public CourierResponseDto() {
-    }
-
+        @NotNull()
+        @Pattern(regexp = "^(\\+375|80)\\d{2}\\s?\\d{3}-\\d{2}-\\d{2}$",
+                message = "phone number must be if form +375XX XXX-XX-XX or 80+375XX XXX-XX-XX")
+        String phone_number
+) {
 
 }
+

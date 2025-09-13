@@ -27,7 +27,7 @@ public class OrderServiceBaseImpl implements OrderService {
 
     @Override
     public long addOrder(OrderRequestDto orderDto) {
-        Optional<Customer> customerOptional=customerRepository.findById(orderDto.getCustomerId());
+        Optional<Customer> customerOptional=customerRepository.findById(orderDto.customerId());
         if(customerOptional.isEmpty()){
             return -1;
         }
@@ -56,7 +56,7 @@ public class OrderServiceBaseImpl implements OrderService {
         if(orderOptional.isEmpty()){
             return false;
         }
-        Optional<Customer> customerOptional=customerRepository.findById(orderDto.getCustomerId());
+        Optional<Customer> customerOptional=customerRepository.findById(orderDto.customerId());
         if (customerOptional.isEmpty()){
             return false;
         }

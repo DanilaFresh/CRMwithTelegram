@@ -7,43 +7,29 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
-public class CourierRequestDto {
-    @NotNull()
-    @Size(max = 100)
-    @NotBlank
-    private String tgUserName;
+public record CourierRequestDto(
 
-    @NotNull()
-    @Size(max = 30)
-    @NotBlank
-    private String name;
+        @Size(max = 100)
+        @NotBlank
+        String tgUserName,
 
-    @NotNull()
-    @Size(max = 30)
-    @NotBlank
-    private String surname;
+        @Size(max = 30)
+        @NotBlank
+        String name,
 
-    @Size(max = 30)
-    @NotBlank
-    private String last_name;
+        @Size(max = 30)
+        @NotBlank
+        String surname,
 
-    @NotNull()
-    @Pattern(regexp = "^(\\+375|80)\\d{2}\\s?\\d{3}-\\d{2}-\\d{2}$",
-    message = "phone number must be if form +375XX XXX-XX-XX or 80+375XX XXX-XX-XX")
-    private String phone_number;
+        @Size(max = 30)
+        @NotBlank
+        String last_name,
 
-    public CourierRequestDto(String tgUserName, String name, String surname, String last_name, String phone_number) {
-        this.tgUserName = tgUserName;
-        this.name = name;
-        this.surname = surname;
-        this.last_name = last_name;
-        this.phone_number = phone_number;
-    }
-
-    public CourierRequestDto() {
-    }
-
+        @NotNull()
+        @Pattern(regexp = "^(\\+375|80)\\d{2}\\s?\\d{3}-\\d{2}-\\d{2}$",
+                message = "phone number must be if form +375XX XXX-XX-XX or 80+375XX XXX-XX-XX")
+        String phone_number
+) {
 
 }
+

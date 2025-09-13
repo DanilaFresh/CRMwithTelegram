@@ -45,7 +45,7 @@ public class OrderController {
                     .unprocessableEntity()
                     .body(" \"error\":" +
                             "\"Customer with id="+
-                            orderDto.getCustomerId()
+                            orderDto.customerId()
                             +" not found\"");
     }
 

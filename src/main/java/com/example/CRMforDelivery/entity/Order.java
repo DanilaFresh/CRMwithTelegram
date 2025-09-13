@@ -18,7 +18,7 @@ public class Order {
     private OrderStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id",nullable = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     @Column(name = "address", nullable = false, length = 100)
@@ -28,7 +28,7 @@ public class Order {
     private String cargoDescription;
 
     @Column(name = "delivery_wishes", length = 500)
-    private String  deliveryWishes;
+    private String deliveryWishes;
 
     public Order() {
     }
