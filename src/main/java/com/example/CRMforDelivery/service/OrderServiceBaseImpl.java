@@ -5,63 +5,113 @@ import com.example.CRMforDelivery.entity.Order;
 import com.example.CRMforDelivery.entity.dto.OrderRequestDto;
 import com.example.CRMforDelivery.entity.dto.OrderResponseDto;
 import com.example.CRMforDelivery.entity.dto.mapper.OrderDtoMapper;
+import com.example.CRMforDelivery.exceptions.NoSuchCustomerException;
+import com.example.CRMforDelivery.exceptions.NoSuchOrderException;
 import com.example.CRMforDelivery.repository.CustomerRepository;
 import com.example.CRMforDelivery.repository.OrderRepository;
 import com.example.CRMforDelivery.service.interfaces.OrderService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
 import java.util.Optional;
+
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class OrderServiceBaseImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
     private final OrderDtoMapper orderDtoMapper;
 
+    private final MessageSource messageSource;
+
     private final CustomerRepository customerRepository;
-    public OrderServiceBaseImpl(OrderRepository orderRepository, OrderDtoMapper orderDtoMapper, CustomerRepository customerRepository) {
-        this.orderRepository = orderRepository;
-        this.orderDtoMapper = orderDtoMapper;
-        this.customerRepository = customerRepository;
+
+
+    @Override
+    public ResponseEntity<?> addOrder(OrderRequestDto orderDto) {
+        Optional<Customer> customerOptional = customerRepository.findById(orderDto.customerId());
+        customerOptional.orElseThrow(() -> {
+            var message = messageSource
+                    .getMessage("customer.not.found",
+                            new Object[]{orderDto.customerId()},
+                            Locale.getDefault());
+            return new NoSuchCustomerException(message);
+        });
+        Order order = orderDtoMapper.toEntity(orderDto, customerOptional.get());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header(HttpHeaders.LOCATION, "/api/orders/" + order.getId())
+                .body(null);
+
     }
 
     @Override
-    public long addOrder(OrderRequestDto orderDto) {
-        Optional<Customer> customerOptional=customerRepository.findById(orderDto.customerId());
-        if(customerOptional.isEmpty()){
-            return -1;
-        }
-        Order order=orderDtoMapper.toEntity(orderDto,customerOptional.get());
-        return  orderRepository.save(order).getId();
+    public ResponseEntity<OrderResponseDto> getOrderById(Long id) {
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        OrderResponseDto orderDto = orderOptional
+                .map(orderDtoMapper::toResponseDto)
+                .orElseThrow(() -> {
+                    var message = messageSource
+                            .getMessage("order.not.found",
+                                    new Object[]{id},
+                                    Locale.getDefault());
+                    return new NoSuchOrderException(message);
+                });
+        return ResponseEntity
+                .ok()
+                .body(orderDto);
     }
 
     @Override
-    public OrderResponseDto getOrderById(Long id) {
-        Optional<Order> orderOptional=orderRepository.findById(id);
-        return orderOptional.map(orderDtoMapper::toResponseDto).orElse(null);
-    }
+    public ResponseEntity<?> updateOrder(Long id, OrderRequestDto orderDto) {
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        orderOptional.orElseThrow(() -> {
+            var message = messageSource
+                    .getMessage("order.not.found",
+                            new Object[]{id},
+                            Locale.getDefault());
+            return new NoSuchOrderException(message);
+        });
 
-    @Override
-    public boolean deleteOrderById(Long id) {
-        if (orderRepository.existsById(id)){
-            orderRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean updateOrder(Long id, OrderRequestDto orderDto) {
-        Optional<Order> orderOptional=orderRepository.findById(id);
-        if(orderOptional.isEmpty()){
-            return false;
-        }
-        Optional<Customer> customerOptional=customerRepository.findById(orderDto.customerId());
-        if (customerOptional.isEmpty()){
-            return false;
-        }
-        Order orderUpdated=orderDtoMapper.toEntity(orderDto,customerOptional.get());
+        Optional<Customer> customerOptional = customerRepository.findById(orderDto.customerId());
+        customerOptional.orElseThrow(() -> {
+            var message = messageSource
+                    .getMessage("customer.not.found",
+                            new Object[]{orderDto.customerId()},
+                            Locale.getDefault());
+            return new NoSuchCustomerException(message);
+        });
+        Order orderUpdated = orderDtoMapper.toEntity(orderDto, customerOptional.get());
+        orderUpdated.setId(id);
         orderRepository.save(orderUpdated);
-        return true;
+        return ResponseEntity
+                .noContent()
+                .build();
     }
+
+    @Override
+    public ResponseEntity<?> deleteOrderById(Long id) {
+        if (!orderRepository.existsById(id)) {
+            var message = messageSource
+                    .getMessage("order.not.found",
+                            new Object[]{id},
+                            Locale.getDefault());
+            throw new NoSuchOrderException(message);
+        }
+        orderRepository.deleteById(id);
+        return ResponseEntity
+                .noContent()
+                .build();
+
+    }
+
+
 }

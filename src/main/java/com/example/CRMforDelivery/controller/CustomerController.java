@@ -21,51 +21,26 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponseDto> getCustomer(@PathVariable Long id) {
-        CustomerResponseDto customerDto = customerService.getCustomerById(id);
-        HttpStatus status;
-        if (customerDto == null) {
-            status = HttpStatus.NOT_FOUND;
-        } else {
-            status = HttpStatus.OK;
-        }
-        return ResponseEntity
-                .status(status)
-                .body(customerDto);
+    @PostMapping()
+    public ResponseEntity<?> addCustomer(@Valid @RequestBody CustomerRequestDto customerDto) {
+        return customerService.addCustomer(customerDto);
     }
 
-    @PostMapping()
-    public ResponseEntity<String> addCustomer(@Valid @RequestBody CustomerRequestDto customerDto) {
-        long id = customerService.addCustomer(customerDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .header(HttpHeaders.LOCATION, "/api/customer/" + id)
-                .body(null);
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponseDto> getCustomer(@PathVariable Long id) {
+        return customerService.getCustomerById(id);
     }
 
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCustomer(@Valid @RequestBody CustomerRequestDto customerDto,
                                             @PathVariable Long id) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        if (customerService.updateCustomer(id, customerDto)) {
-            status = HttpStatus.NO_CONTENT;
-        }
-        return ResponseEntity
-                .status(status)
-                .body(null);
+        return customerService.updateCustomer(id, customerDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        if (customerService.deleteCustomerById(id)) {
-            status = HttpStatus.NO_CONTENT;
-        }
-        return ResponseEntity
-                .status(status)
-                .body(null);
+        return customerService.deleteCustomerById(id);
     }
 
 

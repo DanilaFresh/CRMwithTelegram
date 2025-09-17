@@ -1,4 +1,4 @@
-package com.example.CRMforDelivery.entity;
+package com.example.CRMforDelivery.entity.enums;
 
 public enum OrderStatus {
     FREE,

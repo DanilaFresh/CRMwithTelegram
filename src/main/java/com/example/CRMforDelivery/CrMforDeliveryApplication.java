@@ -14,7 +14,9 @@ import com.nimbusds.jose.jwk.OctetSequenceKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -97,15 +99,14 @@ public class CrMforDeliveryApplication {
                     .build();
         };
     }
-//        return username -> Objects.requireNonNull(jdbcTemplate.query("select * from t_user where c_username = ?",
-//                (rs, i) -> User.builder()
-//                        .username(rs.getString("c_username"))
-//                        .password(rs.getString("c_password"))
-//                        .authorities(
-//                                jdbcTemplate.query("select c_authority from t_user_authority where id_user = ?",
-//                                        (rs1, i1) ->
-//                                                new SimpleGrantedAuthority(rs1.getString("c_authority")),
-//                                        rs.getInt("id")))
-//                        .build(), username).stream().findFirst().orElse(null));
-//    }
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:messages");
+        messageSource.setFallbackToSystemLocale(false); // важно!
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
+
+
 }

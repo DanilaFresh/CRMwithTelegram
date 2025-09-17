@@ -2,10 +2,11 @@ package com.example.CRMforDelivery.service.interfaces;
 
 import com.example.CRMforDelivery.entity.dto.OrderRequestDto;
 import com.example.CRMforDelivery.entity.dto.OrderResponseDto;
+import org.springframework.http.ResponseEntity;
 
 public interface OrderService {
-    long addOrder (OrderRequestDto orderDto);
-    OrderResponseDto getOrderById(Long id);
-    boolean deleteOrderById(Long id);
-    boolean updateOrder(Long id , OrderRequestDto orderDto);
+    ResponseEntity<?> addOrder (OrderRequestDto orderDto);
+    ResponseEntity<OrderResponseDto> getOrderById(Long id);
+    ResponseEntity<?> deleteOrderById(Long id);
+    ResponseEntity<?> updateOrder(Long id , OrderRequestDto orderDto);
 }

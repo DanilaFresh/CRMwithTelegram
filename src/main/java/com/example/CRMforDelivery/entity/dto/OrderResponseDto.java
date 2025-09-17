@@ -1,11 +1,9 @@
 package com.example.CRMforDelivery.entity.dto;
 
-import com.example.CRMforDelivery.entity.OrderStatus;
+import com.example.CRMforDelivery.entity.enums.OrderStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.format.annotation.NumberFormat;
 
 public record OrderResponseDto(

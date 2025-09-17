@@ -1,5 +1,6 @@
 package com.example.CRMforDelivery.entity;
 
+import com.example.CRMforDelivery.entity.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

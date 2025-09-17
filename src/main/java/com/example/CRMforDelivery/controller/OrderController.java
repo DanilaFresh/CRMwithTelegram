@@ -20,58 +20,27 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @PostMapping()
+    public ResponseEntity<?> addOrder(@Valid @RequestBody OrderRequestDto orderDto) {
+        return orderService.addOrder(orderDto);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long id) {
-        OrderResponseDto orderDto = orderService.getOrderById(id);
-        HttpStatus status;
-        if (orderDto == null) {
-            status = HttpStatus.NOT_FOUND;
-        } else {
-            status = HttpStatus.OK;
-        }
-        return ResponseEntity
-                .status(status)
-                .body(orderDto);
+        return orderService.getOrderById(id);
     }
 
-    @PostMapping()
-    public ResponseEntity<String> addOrder(@Valid @RequestBody OrderRequestDto orderDto) {
-        long id = orderService.addOrder(orderDto);
-        if (id > 0) {
-            return ResponseEntity.created(URI.create("/api/order/" + id)).body(null);
-        } else
-            return ResponseEntity
-                    .unprocessableEntity()
-                    .body(" \"error\":" +
-                            "\"Customer with id="+
-                            orderDto.customerId()
-                            +" not found\"");
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrder(@Valid @RequestBody OrderRequestDto orderDto,
                                          @PathVariable Long id) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        if (orderService.updateOrder(id, orderDto)) {
-            status = HttpStatus.NO_CONTENT;
-        }
-        return ResponseEntity
-                .status(status)
-                .body(null);
+        return orderService.updateOrder(id, orderDto);
     }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        if (orderService.deleteOrderById(id)) {
-            status = HttpStatus.NO_CONTENT;
-        }
-        return ResponseEntity
-                .status(status)
-                .body(null);
+        return orderService.deleteOrderById(id);
     }
-
 
 }
