@@ -6,13 +6,12 @@ import com.example.CRMforDelivery.entity.dto.CourierResponseDto;
 import com.example.CRMforDelivery.service.interfaces.CourierService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/couriers")
+@RequestMapping("${api.couriers.base}")
 @RequiredArgsConstructor
 public class CourierController {
 
@@ -44,6 +43,5 @@ public class CourierController {
     public ResponseEntity<?> deleteCourier(@PathVariable Long id) {
         return courierService.deleteCourierById(id);
     }
-
 
 }

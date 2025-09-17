@@ -1,24 +1,23 @@
-# Настройки сервера
+
 server:
   error:
-    include-binding-errors: always  # Включать детали ошибок валидации в ответах (для отладки)
+    include-binding-errors: always
 
-# Логирование
+
 logging:
   level:
-    org.flywaydb: DEBUG  # Подробные логи Flyway
+    org.flywaydb: DEBUG
 
-# Настройки базы данных
 spring:
   application:
-    name: CRMforDelivery  # Имя приложения (используется в логах и метриках)
+    name: CRMforDelivery
   datasource:
-    url: jdbc:postgresql://localhost:5432/crm  # URL подключения к PostgreSQL
-    username: codekitchen  # Имя пользователя БД
-    password: 12345678  # Пароль пользователя БД
-    # Настройки пула соединений HikariCP
+    url: jdbc:postgresql://localhost:5432/crm
+    username: codekitchen
+    password: 12345678
+
     hikari:
-      maximum-pool-size: 8  # Максимальный размер пула соединений
+      maximum-pool-size: 8
   jpa:
     hibernate:
       ddl-auto: none
@@ -28,6 +27,15 @@ spring:
     baseline-version:
     baseline-description: Initial baseline
     locations: classpath:db/migration
+
+api:
+  couriers:
+    base: /api/couriers
+  orders:
+    base: /api/orders
+  customers:
+    base: /api/customers
+
 
 
 jwt:

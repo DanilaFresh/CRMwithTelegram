@@ -30,7 +30,6 @@ import java.text.ParseException;
 import java.util.List;
 
 
-
 @SpringBootApplication
 public class CrMforDeliveryApplication {
 
@@ -38,75 +37,5 @@ public class CrMforDeliveryApplication {
 
         SpringApplication.run(CrMforDeliveryApplication.class, args);
     }
-
-    @Bean
-    public JwtAuthConfigurer jwtAuthConfigurer(
-            @Value("${jwt.access-token-key}") String accessTokenKey,
-            @Value("${jwt.refresh-token-key}") String refreshTokenKey)
-            throws ParseException, JOSEException {
-        return new JwtAuthConfigurer()
-                .accessTokenStringSerializer(new AccessTokenJwsStringSerializer(
-                        new MACSigner(OctetSequenceKey.parse(accessTokenKey))
-                ))
-                .refreshTokenStringSerializer(new RefreshTokenJweStringSerializer(
-                        new DirectEncrypter(OctetSequenceKey.parse(refreshTokenKey))
-
-                ))
-                .accessTokenStringDeserializer(new AccessTokenJwsStringDeserializer(
-                        new MACVerifier(OctetSequenceKey.parse(accessTokenKey))
-                ))
-                .refreshTokenStringDeserializer(new RefreshTokenJwsStringDeserializer(
-                        new DirectDecrypter(OctetSequenceKey.parse(refreshTokenKey))
-                ));
-
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity httpSecurity,
-            JwtAuthConfigurer jwtAuthConfigurer) throws Exception {
-        httpSecurity.apply(jwtAuthConfigurer);
-        return httpSecurity.httpBasic(Customizer.withDefaults())
-                .sessionManagement(sm ->
-                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/manager.html").hasRole("MANAGER")
-                                .requestMatchers("/error").permitAll()
-                                .anyRequest().authenticated()
-                )
-                .build();
-    }
-
-    @Bean
-    @Transactional
-    public UserDetailsService userDetailsService(UserRepository userRepository,
-                                                 UserAuthorityRepository authorityRepository) {
-        return username -> {
-            User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("No such User"));
-            List<UserAuthority> authorityList = authorityRepository.findByUserId(user.getId());
-
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(username)
-                    .password(user.getPassword())
-                    .authorities(
-                            authorityList.stream()
-                                    .map(e -> {
-                                        return new SimpleGrantedAuthority(e.getAuthority());
-                                    })
-                                    .toList()
-                    )
-                    .build();
-        };
-    }
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setFallbackToSystemLocale(false); // важно!
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
-
 
 }

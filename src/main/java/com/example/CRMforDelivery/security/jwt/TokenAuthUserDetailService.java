@@ -20,7 +20,6 @@ public class TokenAuthUserDetailService
         this.tokenRepository = tokenRepository;
     }
 
-
     @Override
     @Transactional
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken authenticationToken)
@@ -31,9 +30,6 @@ public class TokenAuthUserDetailService
                     "nopassword",
                     true,
                     true,
-//                    Boolean.FALSE.equals(this.jdbcTemplate.queryForObject("""
-//                            select exists(select id from t_deactivated_token where id = ?)
-//                            """, Boolean.class, token.id())) &&
                     tokenRepository.findById(token.id()).isEmpty()
                             &&
                             token.expiresAt().isAfter(Instant.now()),

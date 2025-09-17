@@ -1,5 +1,6 @@
 package com.example.CRMforDelivery.service;
 
+import com.example.CRMforDelivery.config.properties.OrdersApiProperties;
 import com.example.CRMforDelivery.entity.Customer;
 import com.example.CRMforDelivery.entity.Order;
 import com.example.CRMforDelivery.entity.dto.OrderRequestDto;
@@ -34,6 +35,8 @@ public class OrderServiceBaseImpl implements OrderService {
 
     private final CustomerRepository customerRepository;
 
+    private final OrdersApiProperties ordersApiProperties;
+
 
     @Override
     public ResponseEntity<?> addOrder(OrderRequestDto orderDto) {
@@ -48,7 +51,7 @@ public class OrderServiceBaseImpl implements OrderService {
         Order order = orderDtoMapper.toEntity(orderDto, customerOptional.get());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header(HttpHeaders.LOCATION, "/api/orders/" + order.getId())
+                .header(HttpHeaders.LOCATION, ordersApiProperties.getBase() + order.getId())
                 .body(null);
 
     }
@@ -61,7 +64,7 @@ public class OrderServiceBaseImpl implements OrderService {
                 .orElseThrow(() -> {
                     var message = messageSource
                             .getMessage("order.not.found",
-                                    new Object[]{id},
+                                    new Object[]{id.toString()},
                                     Locale.getDefault());
                     return new NoSuchOrderException(message);
                 });
@@ -76,7 +79,7 @@ public class OrderServiceBaseImpl implements OrderService {
         orderOptional.orElseThrow(() -> {
             var message = messageSource
                     .getMessage("order.not.found",
-                            new Object[]{id},
+                            new Object[]{id.toString()},
                             Locale.getDefault());
             return new NoSuchOrderException(message);
         });
@@ -102,7 +105,7 @@ public class OrderServiceBaseImpl implements OrderService {
         if (!orderRepository.existsById(id)) {
             var message = messageSource
                     .getMessage("order.not.found",
-                            new Object[]{id},
+                            new Object[]{id.toString()},
                             Locale.getDefault());
             throw new NoSuchOrderException(message);
         }

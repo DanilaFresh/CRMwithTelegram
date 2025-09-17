@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("${api.orders.base}")
 @RequiredArgsConstructor
 public class OrderController {
 

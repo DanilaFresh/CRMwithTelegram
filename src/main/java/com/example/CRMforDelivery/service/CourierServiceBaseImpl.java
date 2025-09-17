@@ -1,13 +1,12 @@
 package com.example.CRMforDelivery.service;
 
+import com.example.CRMforDelivery.config.properties.CouriersApiProperties;
 import com.example.CRMforDelivery.entity.Courier;
 import com.example.CRMforDelivery.entity.dto.CourierRequestDto;
 import com.example.CRMforDelivery.entity.dto.CourierResponseDto;
 import com.example.CRMforDelivery.entity.dto.mapper.CourierDtoMapper;
 import com.example.CRMforDelivery.exceptions.NoSuchCourierException;
 import com.example.CRMforDelivery.repository.CourierRepository;
-import com.example.CRMforDelivery.repository.UserAuthorityRepository;
-import com.example.CRMforDelivery.repository.UserRepository;
 import com.example.CRMforDelivery.service.interfaces.CourierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Locale;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -32,6 +30,8 @@ public class CourierServiceBaseImpl implements CourierService {
 
     private final MessageSource messageSource;
 
+    private final CouriersApiProperties couriersApiProperties;
+
     @Override
     public ResponseEntity<CourierResponseDto> getCourierById(Long id) {
         Optional<Courier> optionalCourier = courierRepository.findById(id);
@@ -40,7 +40,7 @@ public class CourierServiceBaseImpl implements CourierService {
                 .map(courierDtoMapper::toResponseDto)
                 .orElseThrow(() -> {
                     var message = messageSource
-                            .getMessage("courier.not.found", new Object[]{id}, Locale.getDefault());
+                            .getMessage("courier.not.found", new Object[]{id.toString()}, Locale.getDefault());
                     return new NoSuchCourierException(message);
                 });
         return ResponseEntity
@@ -61,7 +61,7 @@ public class CourierServiceBaseImpl implements CourierService {
         long id = courierRepository.save(courier).getId();
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header(HttpHeaders.LOCATION, "/api/couriers/" + id)
+                .header(HttpHeaders.LOCATION, couriersApiProperties.getBase() + id)
                 .body(null);
     }
 
@@ -71,7 +71,7 @@ public class CourierServiceBaseImpl implements CourierService {
         Optional<Courier> courierOld = courierRepository.findById(id);
         courierOld.orElseThrow(() -> {
             var message = messageSource
-                    .getMessage("courier.not.found", new Object[]{id}, Locale.getDefault());
+                    .getMessage("courier.not.found", new Object[]{id.toString()}, Locale.getDefault());
             return new NoSuchCourierException(message);
         });
         courierUpdated.setId(id);
@@ -86,7 +86,7 @@ public class CourierServiceBaseImpl implements CourierService {
     public ResponseEntity<?> deleteCourierById(Long id) {
         if (!courierRepository.existsById(id)) {
             var message = messageSource
-                    .getMessage("courier.not.found", new Object[]{id},  Locale.getDefault());
+                    .getMessage("courier.not.found", new Object[]{id.toString()},  Locale.getDefault());
             throw new NoSuchCourierException(message);
         }
         courierRepository.deleteById(id);

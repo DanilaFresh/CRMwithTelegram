@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,9 +25,11 @@ import java.io.IOException;
 public class JwtLogoutFilter extends OncePerRequestFilter {
 
 
+    @Setter
     private RequestMatcher requestMatcher =
             PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/jwt/logout");
 
+    @Setter
     private SecurityContextRepository securityContextRepository = new RequestAttributeSecurityContextRepository();
 
     private final DeactivatedTokenRepository tokenRepository;
@@ -65,11 +68,4 @@ public class JwtLogoutFilter extends OncePerRequestFilter {
     }
 
 
-    public void setRequestMatcher(RequestMatcher requestMatcher) {
-        this.requestMatcher = requestMatcher;
-    }
-
-    public void setSecurityContextRepository(SecurityContextRepository securityContextRepository) {
-        this.securityContextRepository = securityContextRepository;
-    }
 }

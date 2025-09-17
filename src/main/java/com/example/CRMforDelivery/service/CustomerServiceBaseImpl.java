@@ -1,13 +1,12 @@
 package com.example.CRMforDelivery.service;
 
+import com.example.CRMforDelivery.config.properties.CustomersApiProperties;
 import com.example.CRMforDelivery.entity.Customer;
 import com.example.CRMforDelivery.entity.dto.CustomerRequestDto;
 import com.example.CRMforDelivery.entity.dto.CustomerResponseDto;
 import com.example.CRMforDelivery.entity.dto.mapper.CustomerDtoMapper;
-import com.example.CRMforDelivery.exceptions.NoSuchCourierException;
 import com.example.CRMforDelivery.exceptions.NoSuchCustomerException;
 import com.example.CRMforDelivery.repository.CustomerRepository;
-import com.example.CRMforDelivery.repository.OrderRepository;
 import com.example.CRMforDelivery.service.interfaces.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -31,13 +30,15 @@ public class CustomerServiceBaseImpl implements CustomerService {
 
     private final MessageSource messageSource;
 
+    private final CustomersApiProperties customersApiProperties;
+
 
     public ResponseEntity<?> addCustomer(CustomerRequestDto customerDto) {
         Customer customer = customerDtoMapper.toEntity(customerDto);
         long id = customerRepository.save(customer).getId();
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header(HttpHeaders.LOCATION, "/api/customers/" + id)
+                .header(HttpHeaders.LOCATION, customersApiProperties.getBase() + id)
                 .body(null);
 
     }
@@ -49,7 +50,7 @@ public class CustomerServiceBaseImpl implements CustomerService {
                 .map(customerDtoMapper::toResponseDto)
                 .orElseThrow(() -> {
                     var message = messageSource
-                            .getMessage("customer.not.found", new Object[]{id}, Locale.getDefault());
+                            .getMessage("customer.not.found", new Object[]{id.toString()}, Locale.getDefault());
                     return new NoSuchCustomerException(message);
                 });
         return ResponseEntity
@@ -64,7 +65,7 @@ public class CustomerServiceBaseImpl implements CustomerService {
         Optional<Customer> customerOld = customerRepository.findById(id);
         customerOld.orElseThrow(() -> {
             var message = messageSource
-                    .getMessage("customer.not.found", new Object[]{id}, Locale.getDefault());
+                    .getMessage("customer.not.found", new Object[]{id.toString()}, Locale.getDefault());
             return new NoSuchCustomerException(message);
         });
         customerUpdated.setId(id);
@@ -77,7 +78,7 @@ public class CustomerServiceBaseImpl implements CustomerService {
     public ResponseEntity<?> deleteCustomerById(Long id) {
         if (!customerRepository.existsById(id)) {
             var message = messageSource
-                    .getMessage("customer.not.found", new Object[]{id}, Locale.getDefault());
+                    .getMessage("customer.not.found", new Object[]{id.toString()}, Locale.getDefault());
             throw new NoSuchCustomerException(message);
         }
         customerRepository.deleteById(id);
