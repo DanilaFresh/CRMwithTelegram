@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -74,6 +75,17 @@ public class OrderServiceBaseImpl implements OrderService {
     }
 
     @Override
+    public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
+        return ResponseEntity
+                .ok()
+                .body(orderRepository.findAll()
+                        .stream()
+                        .map(orderDtoMapper::toResponseDto)
+                        .toList());
+
+    }
+
+    @Override
     public ResponseEntity<?> updateOrder(Long id, OrderRequestDto orderDto) {
         Optional<Order> orderOptional = orderRepository.findById(id);
         orderOptional.orElseThrow(() -> {
@@ -99,6 +111,7 @@ public class OrderServiceBaseImpl implements OrderService {
                 .noContent()
                 .build();
     }
+
 
     @Override
     public ResponseEntity<?> deleteOrderById(Long id) {

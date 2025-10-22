@@ -5,6 +5,7 @@ import com.example.CRMforDelivery.entity.dto.OrderRequestDto;
 import com.example.CRMforDelivery.entity.dto.OrderResponseDto;
 import com.example.CRMforDelivery.service.interfaces.OrderService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,9 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.orders.base}")
+@Tag(name = "OrderController", description = "Операции для заказов")
 @RequiredArgsConstructor
 public class OrderController {
 
@@ -28,6 +31,11 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long id) {
         return orderService.getOrderById(id);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderResponseDto>> getAllOrdes() {
+        return orderService.getAllOrders();
     }
 
 

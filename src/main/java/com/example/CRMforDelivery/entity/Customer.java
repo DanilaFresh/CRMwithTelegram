@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "customers")
+@NamedEntityGraph(name = "test",
+        attributeNodes = {@NamedAttributeNode("orders")})
 public class Customer {
     
     @Id
@@ -31,10 +35,10 @@ public class Customer {
     @Column(name = "phone_number", nullable = false, length = 15)
     private String phone_number;
 
-    @Getter(AccessLevel.NONE)
+    @Getter(AccessLevel.PUBLIC)
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<Order> orders = new ArrayList<>();
+    private List<Order> orders;
 
 
     public Customer() {
