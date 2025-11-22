@@ -1,6 +1,5 @@
 package com.example.CRMforDelivery.security.jwt;
 
-import com.example.CRMforDelivery.entity.DeactivatedToken;
 import com.example.CRMforDelivery.repository.DeactivatedTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -83,6 +82,7 @@ public class JwtAuthConfigurer extends AbstractHttpConfigurer<JwtAuthConfigurer,
     }
 
     public JwtAuthConfigurer refreshTokenStringSerializer(Function<Token, String> refreshTokenStringSerializer) {
+        Token token;
         this.refreshTokenStringSerializer = refreshTokenStringSerializer;
         return this;
     }
